@@ -1,0 +1,127 @@
+---
+title: "Community Contribution"
+author: "Yujing Song, Wen Fan"
+date: "2019/10/27"
+output:
+  html_document:
+    df_print: paged
+---
+# Introduction
+
+Our community contribution working on making a cheat sheet for the package Wordcloud2.  This document is writen to show the plot-making processes in the cheat sheet.  
+
+### Load the package
+```{r}
+library(wordcloud2)
+```
+
+
+
+# Part 1: word could text
+This part focuses on changing the text features in the word cloud.
+
+### Observe the data frame
+We used the data frame that the package already has:
+```{r}
+head(demoFreq)
+```
+<p> When creating word cloud, the data frame that we use must contains two columns.  One is the words or the text that we want to show in the word cloud, and the other one is the frequency of these words.
+
+
+### Examples that used most frequently
+Make a word cloud based on the given data frame:
+```{r}
+wordcloud2(data = demoFreq)
+```
+
+Change the size of these words
+```{r}
+wordcloud2(data = demoFreq,size = 0.5)
+```
+
+Change the text colors and background colors:
+```{r}
+wordcloud2(data = demoFreq,color="random-light",backgroundColor = "grey")
+```
+
+
+Change the rotation of the words:
+```{r}
+wordcloud2(data = demoFreq,minRotation = -pi/2, maxRotation = -pi/2)
+```
+
+```{r}
+wordcloud2(data = demoFreq,minRotation = -pi/6, maxRotation = -pi/6,rotateRatio = 1)
+```
+
+
+
+# Part 2: word cloud shape
+
+‘shape’  IN THE PACKAGE
+```{r}
+wordcloud2(demoFreq, size = 0.7, shape = 'circle')
+wordcloud2(demoFreq, size = 0.7, shape = 'cardioid')
+wordcloud2(demoFreq, size = 0.7, shape = 'diamond')
+wordcloud2(demoFreq, size = 0.7, shape = 'triangle-forward')
+wordcloud2(demoFreq, size = 0.7, shape = 'triangle')
+wordcloud2(demoFreq, size = 0.7, shape = 'pentagon')
+wordcloud2(demoFreq, size = 0.7, shape = 'star')
+```
+
+FIGURE AS A MASK
+
+```{r}
+spiderman <- 
+  system.file("examples/spiderman.jpg",
+              package = "wordcloud2")
+wordcloud2(demoFreq, figPath =spiderman, size = 1.5,
+           color = "red",
+           backgroundColor = "white") 
+```
+
+SHAPE OF A WORD
+```{r}
+letterCloud(demoFreq, word = "WORD",  
+                          wordSize = 2,color = 'random-dark', 
+                          backgroundColor = "white") 
+
+```
+
+
+Customize colors
+```{r}
+wordcloud2(demoFreq, color = ifelse(demoFreq[, 2] > 80,
+                                         '#f02222', '#c09292'))
+
+```
+
+Change the themes
+```{r}
+wc = wordcloud2(demoFreq)
+wc + WCtheme(1) + WCtheme(2) + WCtheme(3)
+
+```
+
+
+Comparison & Commonality Cloud
+```{r}
+library("quanteda")
+library('tm')
+obama_trump_dfm <- data_corpus_inaugural %>%
+  corpus_subset(President %in% c("Obama", "Trump")) %>%
+  dfm(remove = stopwords("english"), remove_punct = TRUE, groups = "President") %>%
+  dfm_trim(min_termfreq = 3)
+a =t(obama_trump_dfm)
+a <- as.matrix(a)
+
+if(require(tm)){
+  colnames(a) <- c("Obama","Trump")
+  comparison.cloud(a,random.order=FALSE)
+  commonality.cloud(a,random.order=FALSE,colors = brewer.pal(8, "Dark2"),
+                    title.size=1.5)
+}
+
+```
+
+
