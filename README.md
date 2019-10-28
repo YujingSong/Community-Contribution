@@ -1,6 +1,7 @@
 # Community Contribution
 
 Group number: 53
+
 Contributor: Yujing Song, Wen Fan
 
 The community contribution for our team is working on creating a cheat sheet of wordcloud2 package in r.
